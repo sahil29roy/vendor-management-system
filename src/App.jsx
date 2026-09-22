@@ -1,122 +1,138 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import React, { useState } from "react";
+import { vendors as initialVendors, admin } from "./data/vendors";
+import { vehicles } from "./data/vehicles";
+import { drivers } from "./data/drivers";
+import { documents } from "./data/documents";
+import CreateVendor from "./pages/CreateVendor";
+import VendorList from "./pages/VendorList";
+import "./styles/vendor-management.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [vendorsList, setVendorsList] = useState(initialVendors);
+  const [currentView, setCurrentView] = useState("create-vendor"); // Open Create Vendor by default per prompt
+
+  const handleVendorCreated = (newVendor) => {
+    setVendorsList((prev) => [newVendor, ...prev]);
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className="vms-app-container">
+      {/* Enterprise Header */}
+      <header className="vms-header">
+        <div className="vms-header-left">
+          <span className="vms-brand-title">MoveInSync &bull; Vendor Management</span>
+          <span className="vms-badge-env">Enterprise VMS</span>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
+        <div className="vms-header-right">
+          <div className="vms-user-info">
+            <span className="vms-user-name">{admin.name}</span>
+            <span className="vms-user-role">{admin.role} &bull; Central Operations</span>
+          </div>
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+      </header>
 
-      <div className="ticks"></div>
+      {/* Main Workspace */}
+      <div className="vms-body">
+        {/* Enterprise Sidebar */}
+        <aside className="vms-sidebar">
+          <nav>
+            <ul className="vms-nav-list">
+              <li className="vms-nav-item">
+                <button
+                  type="button"
+                  className={`vms-nav-button ${currentView === "vendors" ? "active" : ""}`}
+                  onClick={() => setCurrentView("vendors")}
+                >
+                  <span>Vendor Directory</span>
+                  <span style={{ fontSize: "11px", color: "#6b7280" }}>
+                    {vendorsList.length}
+                  </span>
+                </button>
+              </li>
+              <li className="vms-nav-item">
+                <button
+                  type="button"
+                  className={`vms-nav-button ${currentView === "create-vendor" ? "active" : ""}`}
+                  onClick={() => setCurrentView("create-vendor")}
+                >
+                  <span>+ Create Vendor</span>
+                </button>
+              </li>
+              <li className="vms-nav-item" style={{ marginTop: "16px" }}>
+                <div
+                  style={{
+                    fontSize: "11px",
+                    fontWeight: 600,
+                    color: "#9ca3af",
+                    textTransform: "uppercase",
+                    padding: "4px 12px",
+                    letterSpacing: "0.04em",
+                  }}
+                >
+                  Fleet Operations
+                </div>
+              </li>
+              <li className="vms-nav-item">
+                <button
+                  type="button"
+                  className="vms-nav-button"
+                  style={{ opacity: 0.8 }}
+                  onClick={() => setCurrentView("vendors")}
+                >
+                  <span>Vehicles</span>
+                  <span style={{ fontSize: "11px", color: "#6b7280" }}>
+                    {vehicles.length}
+                  </span>
+                </button>
+              </li>
+              <li className="vms-nav-item">
+                <button
+                  type="button"
+                  className="vms-nav-button"
+                  style={{ opacity: 0.8 }}
+                  onClick={() => setCurrentView("vendors")}
+                >
+                  <span>Drivers</span>
+                  <span style={{ fontSize: "11px", color: "#6b7280" }}>
+                    {drivers.length}
+                  </span>
+                </button>
+              </li>
+              <li className="vms-nav-item">
+                <button
+                  type="button"
+                  className="vms-nav-button"
+                  style={{ opacity: 0.8 }}
+                  onClick={() => setCurrentView("vendors")}
+                >
+                  <span>Compliance Docs</span>
+                  <span style={{ fontSize: "11px", color: "#6b7280" }}>
+                    {documents.length}
+                  </span>
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </aside>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        {/* Dynamic Content View */}
+        <main className="vms-main-content">
+          {currentView === "create-vendor" ? (
+            <CreateVendor
+              existingVendors={vendorsList}
+              admin={admin}
+              onVendorCreated={handleVendorCreated}
+              onCancel={() => setCurrentView("vendors")}
+            />
+          ) : (
+            <VendorList
+              vendors={vendorsList}
+              admin={admin}
+              onCreateVendorClick={() => setCurrentView("create-vendor")}
+            />
+          )}
+        </main>
+      </div>
+    </div>
+  );
 }
-
-export default App
