@@ -9,6 +9,7 @@ import VendorHierarchy from "./pages/VendorHierarchy";
 import VehicleList from "./pages/VehicleList";
 import DriverList from "./pages/DriverList";
 import Compliance from "./pages/Compliance";
+import Reports from "./pages/Reports";
 import "./styles/vendor-management.css";
 
 export default function App() {
@@ -215,12 +216,47 @@ export default function App() {
                   </span>
                 </button>
               </li>
+
+              <li className="vms-nav-item">
+                <button
+                  type="button"
+                  className={`vms-nav-button ${currentView === "reports" ? "active" : ""}`}
+                  onClick={() => setCurrentView("reports")}
+                >
+                  <span>Reports &amp; Analytics</span>
+                  <span
+                    style={{
+                      fontSize: "10px",
+                      backgroundColor: currentView === "reports" ? "#7c3aed" : "#f3f4f6",
+                      color: currentView === "reports" ? "#ffffff" : "#4b5563",
+                      padding: "1px 6px",
+                      borderRadius: "10px",
+                      fontWeight: 600,
+                    }}
+                  >
+                    BI
+                  </span>
+                </button>
+              </li>
             </ul>
           </nav>
         </aside>
 
         {/* Dynamic Content View */}
         <main className="vms-main-content">
+          {currentView === "reports" && (
+            <Reports
+              vendors={vendorsList}
+              vehicles={vehiclesList}
+              drivers={driversList}
+              documents={documentsList}
+              onNavigateToVendors={() => setCurrentView("vendors")}
+              onNavigateToVehicles={handleNavigateToVehiclesForVendor}
+              onNavigateToDrivers={handleNavigateToDriversForVendor}
+              onNavigateToCompliance={handleNavigateToComplianceForVendor}
+            />
+          )}
+
           {currentView === "compliance" && (
             <Compliance
               documents={documentsList}
