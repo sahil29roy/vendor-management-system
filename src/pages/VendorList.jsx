@@ -4,6 +4,8 @@ export default function VendorList({
   vendors = [],
   admin,
   onCreateVendorClick,
+  onViewHierarchyClick,
+  onViewVehiclesForVendor,
 }) {
   const getParentName = (parentId) => {
     if (parentId === admin.id) {
@@ -31,7 +33,16 @@ export default function VendorList({
               Manage operating partners, hierarchical reporting structures, and fleet authorizations.
             </p>
           </div>
-          <div>
+          <div style={{ display: "flex", gap: "10px" }}>
+            {onViewHierarchyClick && (
+              <button
+                type="button"
+                className="vms-btn vms-btn-secondary"
+                onClick={onViewHierarchyClick}
+              >
+                View Hierarchy Tree &rarr;
+              </button>
+            )}
             <button
               type="button"
               className="vms-btn vms-btn-primary"
@@ -91,7 +102,17 @@ export default function VendorList({
                     </div>
                   </td>
                   <td>
-                    <span style={{ fontWeight: 600 }}>
+                    <span
+                      style={{
+                        fontWeight: 600,
+                        color: onViewVehiclesForVendor ? "#7c3aed" : "inherit",
+                        cursor: onViewVehiclesForVendor ? "pointer" : "default",
+                      }}
+                      onClick={() =>
+                        onViewVehiclesForVendor && onViewVehiclesForVendor(vendor.id)
+                      }
+                      title="Click to view vehicles for this vendor"
+                    >
                       {vendor.vehicleCount ?? 0}
                     </span>{" "}
                     vehicles &bull;{" "}
