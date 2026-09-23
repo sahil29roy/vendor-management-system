@@ -8,6 +8,8 @@ import {
   getLicenseStatus,
   formatDLDate,
 } from "../utils/driverUtils";
+import { getDriverComplianceStatus } from "../utils/complianceUtils";
+import DocumentStatusBadge from "../compliance/DocumentStatusBadge";
 
 export default function DriverDetails({
   isOpen,
@@ -19,6 +21,7 @@ export default function DriverDetails({
   onClose,
   onEdit,
   onAssignVehicle,
+  onNavigateToCompliance,
 }) {
   const [activeTab, setActiveTab] = useState("overview");
 
@@ -28,6 +31,7 @@ export default function DriverDetails({
   const vehicle = getVehicleById(vehicles, driver.vehicleId);
   const driverDocs = getDriverDocuments(documents, driver.id);
   const dlStatus = getLicenseStatus(driver.licenseExpiry);
+  const compliance = getDriverComplianceStatus(documents, driver.id);
 
   return (
     <div className="vm-modal-backdrop" onClick={onClose}>
@@ -292,11 +296,70 @@ export default function DriverDetails({
 
           {/* TAB 4: COMPLIANCE */}
           {activeTab === "compliance" && (
-            <div className="vm-empty-state">
-              <div className="vm-empty-title">Driver Compliance &amp; Safety</div>
-              <p style={{ fontSize: "13px" }}>
-                Police verification status, breathalyzer logs, background check reports, and safe-drop certifications will appear here.
-              </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  backgroundColor: compliance.status === "non_compliant" ? "#fef2f2" : "#f0fdf4",
+                  border: `1px solid ${compliance.status === "non_compliant" ? "#fecaca" : "#bbf7d0"}`,
+                  padding: "14px 16px",
+                  borderRadius: "8px",
+                }}
+              >
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: "14px", color: compliance.status === "non_compliant" ? "#991b1b" : "#166534" }}>
+                    {compliance.status === "non_compliant" ? "Driver is Non-Compliant" : "Driver is Fully Compliant"}
+                  </div>
+                  <div style={{ fontSize: "12px", color: "#4b5563", marginTop: "2px" }}>
+                    Licence Expiry: <strong>{driver.licenseExpiry ? formatDLDate(driver.licenseExpiry) : "No Date"}</strong>
+                  </div>
+                </div>
+
+                <DocumentStatusBadge status={compliance.status} />
+              </div>
+
+              <div>
+                <span className="vh-details-group-title">Mandatory Licencing Audit</span>
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "8px" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "10px 14px",
+                      borderRadius: "6px",
+                      border: "1px solid #e5e7eb",
+                      backgroundColor: "#ffffff",
+                    }}
+                  >
+                    <div>
+                      <div style={{ fontWeight: 600, fontSize: "13px" }}>Commercial Driving Licence</div>
+                      <div style={{ fontSize: "11px", color: "#6b7280" }}>
+                        Number: <code>{driver.licenseNumber || "\u2014"}</code> &bull; Expires: {driver.licenseExpiry ? formatDLDate(driver.licenseExpiry) : "\u2014"}
+                      </div>
+                    </div>
+                    <DocumentStatusBadge status={compliance.dlStatus} />
+                  </div>
+                </div>
+              </div>
+
+              {onNavigateToCompliance && (
+                <div style={{ textAlign: "center", paddingTop: "8px" }}>
+                  <button
+                    type="button"
+                    className="vh-btn vh-btn-secondary"
+                    style={{ width: "100%" }}
+                    onClick={() => {
+                      onClose();
+                      onNavigateToCompliance(driver.id);
+                    }}
+                  >
+                    View Driver Records in Compliance Module &rarr;
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
