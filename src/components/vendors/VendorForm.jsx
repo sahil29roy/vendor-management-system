@@ -56,7 +56,6 @@ export default function VendorForm({
       return updated;
     });
 
-    // Clear error for this field on input
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: null }));
     }

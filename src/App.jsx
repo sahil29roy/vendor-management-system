@@ -5,11 +5,12 @@ import { drivers } from "./data/drivers";
 import { documents } from "./data/documents";
 import CreateVendor from "./pages/CreateVendor";
 import VendorList from "./pages/VendorList";
+import VendorHierarchy from "./pages/VendorHierarchy";
 import "./styles/vendor-management.css";
 
 export default function App() {
   const [vendorsList, setVendorsList] = useState(initialVendors);
-  const [currentView, setCurrentView] = useState("create-vendor"); // Open Create Vendor by default per prompt
+  const [currentView, setCurrentView] = useState("hierarchy"); // Default to hierarchy view per task
 
   const handleVendorCreated = (newVendor) => {
     setVendorsList((prev) => [newVendor, ...prev]);
@@ -37,6 +38,26 @@ export default function App() {
         <aside className="vms-sidebar">
           <nav>
             <ul className="vms-nav-list">
+              <li className="vms-nav-item">
+                <button
+                  type="button"
+                  className={`vms-nav-button ${currentView === "hierarchy" ? "active" : ""}`}
+                  onClick={() => setCurrentView("hierarchy")}
+                >
+                  <span>Vendor Hierarchy</span>
+                  <span
+                    style={{
+                      fontSize: "10px",
+                      backgroundColor: currentView === "hierarchy" ? "#7c3aed" : "#f3f4f6",
+                      color: currentView === "hierarchy" ? "#ffffff" : "#4b5563",
+                      padding: "1px 6px",
+                      borderRadius: "10px",
+                    }}
+                  >
+                    Tree
+                  </span>
+                </button>
+              </li>
               <li className="vms-nav-item">
                 <button
                   type="button"
@@ -117,18 +138,32 @@ export default function App() {
 
         {/* Dynamic Content View */}
         <main className="vms-main-content">
-          {currentView === "create-vendor" ? (
+          {currentView === "hierarchy" && (
+            <VendorHierarchy
+              vendors={vendorsList}
+              admin={admin}
+              vehicles={vehicles}
+              drivers={drivers}
+              onUpdateVendors={setVendorsList}
+              onNavigateDirectory={() => setCurrentView("vendors")}
+            />
+          )}
+
+          {currentView === "create-vendor" && (
             <CreateVendor
               existingVendors={vendorsList}
               admin={admin}
               onVendorCreated={handleVendorCreated}
               onCancel={() => setCurrentView("vendors")}
             />
-          ) : (
+          )}
+
+          {currentView === "vendors" && (
             <VendorList
               vendors={vendorsList}
               admin={admin}
               onCreateVendorClick={() => setCurrentView("create-vendor")}
+              onViewHierarchyClick={() => setCurrentView("hierarchy")}
             />
           )}
         </main>
