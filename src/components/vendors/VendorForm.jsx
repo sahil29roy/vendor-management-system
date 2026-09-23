@@ -38,7 +38,7 @@ export default function VendorForm({
   const [delegatedAccess, setDelegatedAccess] = useState(false);
   const [delegatedPermissions, setDelegatedPermissions] = useState([]);
   const [errors, setErrors] = useState({});
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [_isSubmitted, setIsSubmitted] = useState(false);
 
   // Field change handler
   const handleInputChange = (e) => {

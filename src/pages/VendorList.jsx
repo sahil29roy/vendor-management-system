@@ -5,6 +5,7 @@ export default function VendorList({
   admin,
   onCreateVendorClick,
   onViewHierarchyClick,
+  onViewVehiclesForVendor,
 }) {
   const getParentName = (parentId) => {
     if (parentId === admin.id) {
@@ -101,7 +102,17 @@ export default function VendorList({
                     </div>
                   </td>
                   <td>
-                    <span style={{ fontWeight: 600 }}>
+                    <span
+                      style={{
+                        fontWeight: 600,
+                        color: onViewVehiclesForVendor ? "#7c3aed" : "inherit",
+                        cursor: onViewVehiclesForVendor ? "pointer" : "default",
+                      }}
+                      onClick={() =>
+                        onViewVehiclesForVendor && onViewVehiclesForVendor(vendor.id)
+                      }
+                      title="Click to view vehicles for this vendor"
+                    >
                       {vendor.vehicleCount ?? 0}
                     </span>{" "}
                     vehicles &bull;{" "}
