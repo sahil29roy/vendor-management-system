@@ -6,7 +6,6 @@
 
 import {
   getDocumentStatus,
-  getDaysUntilExpiry,
   formatDocDate,
   formatExpiryDescription,
   getVehicleComplianceStatus,
