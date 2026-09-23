@@ -1,0 +1,625 @@
+/**
+ * dashboard.css
+ * Enterprise styles for Central Super Vendor Dashboard.
+ * Theme: Clean white cards, light borders (#e5e7eb), purple accent (#7c3aed),
+ * semantic badges (green, orange, red, neutral gray), and full-screen responsive layouts.
+ */
+
+.dsh-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+/* ==========================================================================
+   Header & Controls
+   ========================================================================== */
+.dsh-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.dsh-header-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dsh-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.dsh-subtitle {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.dsh-header-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.dsh-date-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #374151;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.dsh-filter-select {
+  padding: 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #374151;
+  background-color: #ffffff;
+  outline: none;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.dsh-filter-select:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.15);
+}
+
+/* ==========================================================================
+   Operational Alerts
+   ========================================================================== */
+.dsh-alerts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dsh-alert-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  border: 1px solid transparent;
+  flex-wrap: wrap;
+  gap: 12px;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.dsh-alert-critical {
+  background-color: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+.dsh-alert-warning {
+  background-color: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+
+.dsh-alert-healthy {
+  background-color: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #166534;
+}
+
+.dsh-alert-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dsh-alert-icon {
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dsh-alert-title {
+  font-weight: 600;
+}
+
+.dsh-alert-desc {
+  font-size: 12px;
+  opacity: 0.85;
+  margin-top: 2px;
+}
+
+.dsh-alert-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.dsh-alert-critical .dsh-alert-btn {
+  background-color: #ef4444;
+  color: #ffffff;
+}
+
+.dsh-alert-critical .dsh-alert-btn:hover {
+  background-color: #dc2626;
+}
+
+.dsh-alert-warning .dsh-alert-btn {
+  background-color: #f59e0b;
+  color: #ffffff;
+}
+
+.dsh-alert-warning .dsh-alert-btn:hover {
+  background-color: #d97706;
+}
+
+/* ==========================================================================
+   Summary KPI Cards Grid
+   ========================================================================== */
+.dsh-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+}
+
+.dsh-stat-card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  text-align: left;
+}
+
+.dsh-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+  border-color: #7c3aed;
+}
+
+.dsh-stat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dsh-stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #6b7280;
+  letter-spacing: 0.04em;
+}
+
+.dsh-stat-value {
+  font-size: 26px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.1;
+}
+
+.dsh-stat-subtext {
+  font-size: 11px;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Specific KPI Colors */
+.dsh-stat-active .dsh-stat-value {
+  color: #10b981;
+}
+
+.dsh-stat-warning .dsh-stat-value {
+  color: #f59e0b;
+}
+
+.dsh-stat-danger .dsh-stat-value {
+  color: #ef4444;
+}
+
+.dsh-stat-purple .dsh-stat-value {
+  color: #7c3aed;
+}
+
+/* ==========================================================================
+   Multi-Column Grids
+   ========================================================================== */
+.dsh-grid-2col {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 1024px) {
+  .dsh-grid-2col {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   Dashboard Cards
+   ========================================================================== */
+.dsh-card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.dsh-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.dsh-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.dsh-card-subtitle {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 2px 0 0 0;
+}
+
+.dsh-card-action {
+  font-size: 12px;
+  font-weight: 600;
+  color: #7c3aed;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+}
+
+.dsh-card-action:hover {
+  text-decoration: underline;
+  color: #6d28d9;
+}
+
+/* ==========================================================================
+   Fleet Overview Chart & Metrics
+   ========================================================================== */
+.dsh-fleet-chart-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.dsh-donut-wrap {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  flex-shrink: 0;
+}
+
+.dsh-donut-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.dsh-donut-pct {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1;
+}
+
+.dsh-donut-label {
+  font-size: 10px;
+  color: #6b7280;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.dsh-fleet-stats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.dsh-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.dsh-pill-green {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.dsh-pill-red {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.dsh-pill-yellow {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.dsh-pill-gray {
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
+
+.dsh-pill-purple {
+  background-color: #f3e8ff;
+  color: #7c3aed;
+}
+
+/* ==========================================================================
+   Meters and Progress Bars
+   ========================================================================== */
+.dsh-meter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dsh-meter-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #4b5563;
+}
+
+.dsh-meter-track {
+  width: 100%;
+  height: 7px;
+  background-color: #f3f4f6;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.dsh-meter-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* ==========================================================================
+   Tables (Vendor Overview, Expiries)
+   ========================================================================== */
+.dsh-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.dsh-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  text-align: left;
+}
+
+.dsh-table th {
+  background-color: #f9fafb;
+  color: #6b7280;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap;
+}
+
+.dsh-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f3f4f6;
+  color: #1f2937;
+  vertical-align: middle;
+}
+
+.dsh-table tbody tr:hover {
+  background-color: #faf5ff;
+}
+
+/* ==========================================================================
+   Compact Hierarchy Tree Snippet
+   ========================================================================== */
+.dsh-hierarchy-compact {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  color: #374151;
+  line-height: 1.6;
+}
+
+.dsh-tree-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dsh-tree-root {
+  font-weight: 700;
+  color: #7c3aed;
+}
+
+/* ==========================================================================
+   Recent Activity Stream
+   ========================================================================== */
+.dsh-activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.dsh-activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 10px;
+  background-color: #f9fafb;
+  border-radius: 6px;
+  border: 1px solid #f3f4f6;
+  font-size: 12px;
+}
+
+.dsh-activity-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #7c3aed;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+
+.dsh-activity-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.dsh-activity-msg {
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.dsh-activity-time {
+  font-size: 10px;
+  color: #9ca3af;
+}
+
+/* ==========================================================================
+   Quick Actions Grid
+   ========================================================================== */
+.dsh-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.dsh-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 14px;
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  text-align: center;
+}
+
+.dsh-action-btn:hover {
+  background-color: #7c3aed;
+  border-color: #7c3aed;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(124, 58, 237, 0.2);
+}
+
+.dsh-action-btn-primary {
+  background-color: #7c3aed;
+  border-color: #7c3aed;
+  color: #ffffff;
+}
+
+.dsh-action-btn-primary:hover {
+  background-color: #6d28d9;
+  border-color: #6d28d9;
+}
+
+/* ==========================================================================
+   Empty State
+   ========================================================================== */
+.dsh-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  background-color: #ffffff;
+  border: 1px dashed #d1d5db;
+  border-radius: 8px;
+  gap: 12px;
+}
+
+.dsh-empty-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.dsh-empty-desc {
+  font-size: 13px;
+  color: #6b7280;
+  max-width: 400px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

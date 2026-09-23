@@ -3,6 +3,7 @@ import { vendors as initialVendors, admin } from "./data/vendors";
 import { vehicles as initialVehicles } from "./data/vehicles";
 import { drivers as initialDrivers } from "./data/drivers";
 import { documents as initialDocuments } from "./data/documents";
+import Dashboard from "./pages/Dashboard";
 import CreateVendor from "./pages/CreateVendor";
 import VendorList from "./pages/VendorList";
 import VendorHierarchy from "./pages/VendorHierarchy";
@@ -17,15 +18,73 @@ export default function App() {
   const [vehiclesList, setVehiclesList] = useState(initialVehicles);
   const [driversList, setDriversList] = useState(initialDrivers);
   const [documentsList, setDocumentsList] = useState(initialDocuments);
-  const [currentView, setCurrentView] = useState("compliance"); // Default to compliance for verification
+  const [currentView, setCurrentView] = useState("dashboard"); // Default main landing page
   const [selectedVendorFilterForVehicles, setSelectedVendorFilterForVehicles] = useState(null);
   const [selectedVendorFilterForDrivers, setSelectedVendorFilterForDrivers] = useState(null);
   const [selectedVendorFilterForCompliance, setSelectedVendorFilterForCompliance] = useState(null);
   const [selectedVehicleFilterForCompliance, setSelectedVehicleFilterForCompliance] = useState(null);
   const [selectedDriverFilterForCompliance, setSelectedDriverFilterForCompliance] = useState(null);
 
+  // Frontend Session Activity Stream
+  const [activities, setActivities] = useState([
+    {
+      id: "act-init-1",
+      type: "SYSTEM_INITIALIZED",
+      message: "Central fleet operations session initialized with 6 vendors, 23 commercial vehicles, and 23 active drivers.",
+      timestamp: "Session Start",
+      entityType: "system",
+      entityId: "admin-001",
+    },
+    {
+      id: "act-init-2",
+      type: "COMPLIANCE_AUDIT",
+      message: "Automated regulatory compliance audit completed: monitored RC, Permit, Pollution, and Driving Licenses.",
+      timestamp: "System",
+      entityType: "compliance",
+      entityId: "all",
+    },
+  ]);
+
+  const logActivity = (type, message, entityType = null, entityId = null) => {
+    const newAct = {
+      id: `act-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      type,
+      message,
+      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      entityType,
+      entityId,
+    };
+    setActivities((prev) => [newAct, ...prev]);
+  };
+
   const handleVendorCreated = (newVendor) => {
     setVendorsList((prev) => [newVendor, ...prev]);
+    logActivity(
+      "VENDOR_CREATED",
+      `Vendor "${newVendor.name}" was onboarded into the network.`,
+      "vendor",
+      newVendor.id
+    );
+  };
+
+  const handleUpdateVendors = (newVendors) => {
+    setVendorsList(newVendors);
+    logActivity("VENDOR_MOVED", "Vendor hierarchy structure was updated.", "hierarchy", "admin-001");
+  };
+
+  const handleUpdateVehicles = (updater) => {
+    setVehiclesList(updater);
+    logActivity("VEHICLE_UPDATED", "Commercial vehicle records were updated.", "vehicle", null);
+  };
+
+  const handleUpdateDrivers = (updater) => {
+    setDriversList(updater);
+    logActivity("DRIVER_UPDATED", "Driver roster records were updated.", "driver", null);
+  };
+
+  const handleUpdateDocuments = (updater) => {
+    setDocumentsList(updater);
+    logActivity("DOC_UPDATED", "Compliance documents were audited or updated.", "document", null);
   };
 
   const handleNavigateToVehiclesForVendor = (vendorId) => {
@@ -81,6 +140,28 @@ export default function App() {
         <aside className="vms-sidebar">
           <nav>
             <ul className="vms-nav-list">
+              <li className="vms-nav-item">
+                <button
+                  type="button"
+                  className={`vms-nav-button ${currentView === "dashboard" ? "active" : ""}`}
+                  onClick={() => setCurrentView("dashboard")}
+                >
+                  <span>Dashboard</span>
+                  <span
+                    style={{
+                      fontSize: "10px",
+                      backgroundColor: currentView === "dashboard" ? "#7c3aed" : "#f3f4f6",
+                      color: currentView === "dashboard" ? "#ffffff" : "#4b5563",
+                      padding: "1px 6px",
+                      borderRadius: "10px",
+                      fontWeight: 600,
+                    }}
+                  >
+                    HQ
+                  </span>
+                </button>
+              </li>
+
               <li className="vms-nav-item">
                 <button
                   type="button"
@@ -244,6 +325,39 @@ export default function App() {
 
         {/* Dynamic Content View */}
         <main className="vms-main-content">
+          {currentView === "dashboard" && (
+            <Dashboard
+              vendors={vendorsList}
+              vehicles={vehiclesList}
+              drivers={driversList}
+              documents={documentsList}
+              admin={admin}
+              activities={activities}
+              onNavigate={(target) => {
+                if (target === "vendors") {
+                  setCurrentView("vendors");
+                } else if (target === "create-vendor") {
+                  setCurrentView("create-vendor");
+                } else if (target === "hierarchy") {
+                  setCurrentView("hierarchy");
+                } else if (target === "vehicles") {
+                  setSelectedVendorFilterForVehicles(null);
+                  setCurrentView("vehicles");
+                } else if (target === "drivers") {
+                  setSelectedVendorFilterForDrivers(null);
+                  setCurrentView("drivers");
+                } else if (target === "compliance") {
+                  setSelectedVendorFilterForCompliance(null);
+                  setSelectedVehicleFilterForCompliance(null);
+                  setSelectedDriverFilterForCompliance(null);
+                  setCurrentView("compliance");
+                } else if (target === "reports") {
+                  setCurrentView("reports");
+                }
+              }}
+            />
+          )}
+
           {currentView === "reports" && (
             <Reports
               vendors={vendorsList}
@@ -263,7 +377,7 @@ export default function App() {
               vehicles={vehiclesList}
               drivers={driversList}
               vendors={vendorsList}
-              onUpdateDocuments={setDocumentsList}
+              onUpdateDocuments={handleUpdateDocuments}
               initialVendorFilter={selectedVendorFilterForCompliance}
               initialVehicleFilter={selectedVehicleFilterForCompliance}
               initialDriverFilter={selectedDriverFilterForCompliance}
@@ -290,9 +404,9 @@ export default function App() {
               vehicles={vehiclesList}
               documents={documentsList}
               admin={admin}
-              onUpdateDrivers={setDriversList}
-              onUpdateVehicles={setVehiclesList}
-              onUpdateDocuments={setDocumentsList}
+              onUpdateDrivers={handleUpdateDrivers}
+              onUpdateVehicles={handleUpdateVehicles}
+              onUpdateDocuments={handleUpdateDocuments}
               onNavigateToCompliance={handleNavigateToComplianceForDriver}
               initialVendorFilter={selectedVendorFilterForDrivers}
               onClearVendorFilter={() => setSelectedVendorFilterForDrivers(null)}
@@ -306,9 +420,9 @@ export default function App() {
               drivers={driversList}
               documents={documentsList}
               admin={admin}
-              onUpdateVehicles={setVehiclesList}
-              onUpdateDrivers={setDriversList}
-              onUpdateDocuments={setDocumentsList}
+              onUpdateVehicles={handleUpdateVehicles}
+              onUpdateDrivers={handleUpdateDrivers}
+              onUpdateDocuments={handleUpdateDocuments}
               onNavigateToCompliance={handleNavigateToComplianceForVehicle}
               initialVendorFilter={selectedVendorFilterForVehicles}
               onClearVendorFilter={() => setSelectedVendorFilterForVehicles(null)}
@@ -321,7 +435,7 @@ export default function App() {
               admin={admin}
               vehicles={vehiclesList}
               drivers={driversList}
-              onUpdateVendors={setVendorsList}
+              onUpdateVendors={handleUpdateVendors}
               onNavigateDirectory={() => setCurrentView("vendors")}
             />
           )}
