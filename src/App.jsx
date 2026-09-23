@@ -64,7 +64,7 @@ export default function App() {
       {/* Enterprise Header */}
       <header className="vms-header">
         <div className="vms-header-left">
-          <span className="vms-brand-title">MoveInSync &bull; Fleet &amp; Driver Management</span>
+          <span className="vms-brand-title">Fleet &amp; Driver Management</span>
           <span className="vms-badge-env">Enterprise VMS</span>
         </div>
         <div className="vms-header-right">
