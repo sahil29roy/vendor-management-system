@@ -2,21 +2,26 @@ import React, { useState } from "react";
 import { vendors as initialVendors, admin } from "./data/vendors";
 import { vehicles as initialVehicles } from "./data/vehicles";
 import { drivers as initialDrivers } from "./data/drivers";
-import { documents } from "./data/documents";
+import { documents as initialDocuments } from "./data/documents";
 import CreateVendor from "./pages/CreateVendor";
 import VendorList from "./pages/VendorList";
 import VendorHierarchy from "./pages/VendorHierarchy";
 import VehicleList from "./pages/VehicleList";
 import DriverList from "./pages/DriverList";
+import Compliance from "./pages/Compliance";
 import "./styles/vendor-management.css";
 
 export default function App() {
   const [vendorsList, setVendorsList] = useState(initialVendors);
   const [vehiclesList, setVehiclesList] = useState(initialVehicles);
   const [driversList, setDriversList] = useState(initialDrivers);
-  const [currentView, setCurrentView] = useState("drivers"); // Default to drivers view per user request
+  const [documentsList, setDocumentsList] = useState(initialDocuments);
+  const [currentView, setCurrentView] = useState("compliance"); // Default to compliance for verification
   const [selectedVendorFilterForVehicles, setSelectedVendorFilterForVehicles] = useState(null);
   const [selectedVendorFilterForDrivers, setSelectedVendorFilterForDrivers] = useState(null);
+  const [selectedVendorFilterForCompliance, setSelectedVendorFilterForCompliance] = useState(null);
+  const [selectedVehicleFilterForCompliance, setSelectedVehicleFilterForCompliance] = useState(null);
+  const [selectedDriverFilterForCompliance, setSelectedDriverFilterForCompliance] = useState(null);
 
   const handleVendorCreated = (newVendor) => {
     setVendorsList((prev) => [newVendor, ...prev]);
@@ -30,6 +35,27 @@ export default function App() {
   const handleNavigateToDriversForVendor = (vendorId) => {
     setSelectedVendorFilterForDrivers(vendorId);
     setCurrentView("drivers");
+  };
+
+  const handleNavigateToComplianceForVehicle = (vehicleId) => {
+    setSelectedVehicleFilterForCompliance(vehicleId);
+    setSelectedDriverFilterForCompliance(null);
+    setSelectedVendorFilterForCompliance(null);
+    setCurrentView("compliance");
+  };
+
+  const handleNavigateToComplianceForDriver = (driverId) => {
+    setSelectedDriverFilterForCompliance(driverId);
+    setSelectedVehicleFilterForCompliance(null);
+    setSelectedVendorFilterForCompliance(null);
+    setCurrentView("compliance");
+  };
+
+  const handleNavigateToComplianceForVendor = (vendorId) => {
+    setSelectedVendorFilterForCompliance(vendorId);
+    setSelectedVehicleFilterForCompliance(null);
+    setSelectedDriverFilterForCompliance(null);
+    setCurrentView("compliance");
   };
 
   return (
@@ -166,13 +192,26 @@ export default function App() {
               <li className="vms-nav-item">
                 <button
                   type="button"
-                  className="vms-nav-button"
-                  style={{ opacity: 0.8 }}
-                  onClick={() => setCurrentView("vendors")}
+                  className={`vms-nav-button ${currentView === "compliance" ? "active" : ""}`}
+                  onClick={() => {
+                    setSelectedVendorFilterForCompliance(null);
+                    setSelectedVehicleFilterForCompliance(null);
+                    setSelectedDriverFilterForCompliance(null);
+                    setCurrentView("compliance");
+                  }}
                 >
-                  <span>Compliance Docs</span>
-                  <span style={{ fontSize: "11px", color: "#6b7280" }}>
-                    {documents.length}
+                  <span>Compliance Central</span>
+                  <span
+                    style={{
+                      fontSize: "11px",
+                      backgroundColor: currentView === "compliance" ? "#7c3aed" : "#f3f4f6",
+                      color: currentView === "compliance" ? "#ffffff" : "#4b5563",
+                      padding: "1px 7px",
+                      borderRadius: "10px",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {documentsList.length}
                   </span>
                 </button>
               </li>
@@ -182,15 +221,43 @@ export default function App() {
 
         {/* Dynamic Content View */}
         <main className="vms-main-content">
+          {currentView === "compliance" && (
+            <Compliance
+              documents={documentsList}
+              vehicles={vehiclesList}
+              drivers={driversList}
+              vendors={vendorsList}
+              onUpdateDocuments={setDocumentsList}
+              initialVendorFilter={selectedVendorFilterForCompliance}
+              initialVehicleFilter={selectedVehicleFilterForCompliance}
+              initialDriverFilter={selectedDriverFilterForCompliance}
+              onClearInitialFilters={() => {
+                setSelectedVendorFilterForCompliance(null);
+                setSelectedVehicleFilterForCompliance(null);
+                setSelectedDriverFilterForCompliance(null);
+              }}
+              onViewVehicleInModule={(v) => {
+                setSelectedVendorFilterForVehicles(v.vendorId);
+                setCurrentView("vehicles");
+              }}
+              onViewDriverInModule={(d) => {
+                setSelectedVendorFilterForDrivers(d.vendorId);
+                setCurrentView("drivers");
+              }}
+            />
+          )}
+
           {currentView === "drivers" && (
             <DriverList
               drivers={driversList}
               vendors={vendorsList}
               vehicles={vehiclesList}
-              documents={documents}
+              documents={documentsList}
               admin={admin}
               onUpdateDrivers={setDriversList}
               onUpdateVehicles={setVehiclesList}
+              onUpdateDocuments={setDocumentsList}
+              onNavigateToCompliance={handleNavigateToComplianceForDriver}
               initialVendorFilter={selectedVendorFilterForDrivers}
               onClearVendorFilter={() => setSelectedVendorFilterForDrivers(null)}
             />
@@ -201,10 +268,12 @@ export default function App() {
               vehicles={vehiclesList}
               vendors={vendorsList}
               drivers={driversList}
-              documents={documents}
+              documents={documentsList}
               admin={admin}
               onUpdateVehicles={setVehiclesList}
               onUpdateDrivers={setDriversList}
+              onUpdateDocuments={setDocumentsList}
+              onNavigateToCompliance={handleNavigateToComplianceForVehicle}
               initialVendorFilter={selectedVendorFilterForVehicles}
               onClearVendorFilter={() => setSelectedVendorFilterForVehicles(null)}
             />
@@ -240,6 +309,7 @@ export default function App() {
               onViewHierarchyClick={() => setCurrentView("hierarchy")}
               onViewVehiclesForVendor={handleNavigateToVehiclesForVendor}
               onViewDriversForVendor={handleNavigateToDriversForVendor}
+              onViewComplianceForVendor={handleNavigateToComplianceForVendor}
             />
           )}
         </main>

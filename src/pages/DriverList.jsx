@@ -24,6 +24,7 @@ export default function DriverList({
   onUpdateVehicles,
   initialVendorFilter = null,
   onClearVendorFilter,
+  onNavigateToCompliance,
 }) {
   // Filter states
   const [searchQuery, setSearchQuery] = useState("");
@@ -401,6 +402,7 @@ export default function DriverList({
         onClose={() => setIsDetailsOpen(false)}
         onEdit={handleOpenEdit}
         onAssignVehicle={handleOpenAssign}
+        onNavigateToCompliance={onNavigateToCompliance}
       />
     </div>
   );

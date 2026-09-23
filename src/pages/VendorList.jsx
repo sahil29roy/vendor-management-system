@@ -9,6 +9,7 @@ export default function VendorList({
   onViewHierarchyClick,
   onViewVehiclesForVendor,
   onViewDriversForVendor,
+  onViewComplianceForVendor,
 }) {
   const getParentName = (parentId) => {
     if (parentId === admin.id) {
@@ -145,6 +146,23 @@ export default function VendorList({
                             {dCount}
                           </span>{" "}
                           drivers
+                          {onViewComplianceForVendor && (
+                            <>
+                              {" "}&bull;{" "}
+                              <span
+                                style={{
+                                  fontWeight: 600,
+                                  color: "#0369a1",
+                                  cursor: "pointer",
+                                  fontSize: "11px",
+                                }}
+                                onClick={() => onViewComplianceForVendor(vendor.id)}
+                                title="Click to view compliance records for this vendor"
+                              >
+                                Compliance
+                              </span>
+                            </>
+                          )}
                         </>
                       );
                     })()}
