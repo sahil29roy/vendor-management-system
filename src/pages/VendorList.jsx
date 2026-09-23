@@ -2,10 +2,13 @@ import React from "react";
 
 export default function VendorList({
   vendors = [],
+  vehicles = [],
+  drivers = [],
   admin,
   onCreateVendorClick,
   onViewHierarchyClick,
   onViewVehiclesForVendor,
+  onViewDriversForVendor,
 }) {
   const getParentName = (parentId) => {
     if (parentId === admin.id) {
@@ -102,24 +105,49 @@ export default function VendorList({
                     </div>
                   </td>
                   <td>
-                    <span
-                      style={{
-                        fontWeight: 600,
-                        color: onViewVehiclesForVendor ? "#7c3aed" : "inherit",
-                        cursor: onViewVehiclesForVendor ? "pointer" : "default",
-                      }}
-                      onClick={() =>
-                        onViewVehiclesForVendor && onViewVehiclesForVendor(vendor.id)
-                      }
-                      title="Click to view vehicles for this vendor"
-                    >
-                      {vendor.vehicleCount ?? 0}
-                    </span>{" "}
-                    vehicles &bull;{" "}
-                    <span style={{ fontWeight: 600 }}>
-                      {vendor.driverCount ?? 0}
-                    </span>{" "}
-                    drivers
+                    {(() => {
+                      const vCount = vehicles.length
+                        ? vehicles.filter((v) => v.vendorId === vendor.id).length
+                        : vendor.vehicleCount ?? 0;
+                      const dCount = drivers.length
+                        ? drivers.filter((d) => d.vendorId === vendor.id).length
+                        : vendor.driverCount ?? 0;
+
+                      return (
+                        <>
+                          <span
+                            style={{
+                              fontWeight: 600,
+                              color: onViewVehiclesForVendor ? "#7c3aed" : "inherit",
+                              cursor: onViewVehiclesForVendor ? "pointer" : "default",
+                            }}
+                            onClick={() =>
+                              onViewVehiclesForVendor &&
+                              onViewVehiclesForVendor(vendor.id)
+                            }
+                            title="Click to view vehicles for this vendor"
+                          >
+                            {vCount}
+                          </span>{" "}
+                          vehicles &bull;{" "}
+                          <span
+                            style={{
+                              fontWeight: 600,
+                              color: onViewDriversForVendor ? "#7c3aed" : "inherit",
+                              cursor: onViewDriversForVendor ? "pointer" : "default",
+                            }}
+                            onClick={() =>
+                              onViewDriversForVendor &&
+                              onViewDriversForVendor(vendor.id)
+                            }
+                            title="Click to view drivers for this vendor"
+                          >
+                            {dCount}
+                          </span>{" "}
+                          drivers
+                        </>
+                      );
+                    })()}
                   </td>
                   <td>
                     <span
