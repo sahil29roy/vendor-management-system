@@ -7,14 +7,16 @@ import CreateVendor from "./pages/CreateVendor";
 import VendorList from "./pages/VendorList";
 import VendorHierarchy from "./pages/VendorHierarchy";
 import VehicleList from "./pages/VehicleList";
+import DriverList from "./pages/DriverList";
 import "./styles/vendor-management.css";
 
 export default function App() {
   const [vendorsList, setVendorsList] = useState(initialVendors);
   const [vehiclesList, setVehiclesList] = useState(initialVehicles);
   const [driversList, setDriversList] = useState(initialDrivers);
-  const [currentView, setCurrentView] = useState("vehicles"); // Default to vehicles view per user request
+  const [currentView, setCurrentView] = useState("drivers"); // Default to drivers view per user request
   const [selectedVendorFilterForVehicles, setSelectedVendorFilterForVehicles] = useState(null);
+  const [selectedVendorFilterForDrivers, setSelectedVendorFilterForDrivers] = useState(null);
 
   const handleVendorCreated = (newVendor) => {
     setVendorsList((prev) => [newVendor, ...prev]);
@@ -25,12 +27,17 @@ export default function App() {
     setCurrentView("vehicles");
   };
 
+  const handleNavigateToDriversForVendor = (vendorId) => {
+    setSelectedVendorFilterForDrivers(vendorId);
+    setCurrentView("drivers");
+  };
+
   return (
     <div className="vms-app-container">
       {/* Enterprise Header */}
       <header className="vms-header">
         <div className="vms-header-left">
-          <span className="vms-brand-title">MoveInSync &bull; Fleet & Vendor Management</span>
+          <span className="vms-brand-title">MoveInSync &bull; Fleet &amp; Driver Management</span>
           <span className="vms-badge-env">Enterprise VMS</span>
         </div>
         <div className="vms-header-right">
@@ -47,6 +54,31 @@ export default function App() {
         <aside className="vms-sidebar">
           <nav>
             <ul className="vms-nav-list">
+              <li className="vms-nav-item">
+                <button
+                  type="button"
+                  className={`vms-nav-button ${currentView === "drivers" ? "active" : ""}`}
+                  onClick={() => {
+                    setSelectedVendorFilterForDrivers(null);
+                    setCurrentView("drivers");
+                  }}
+                >
+                  <span>Active Drivers</span>
+                  <span
+                    style={{
+                      fontSize: "11px",
+                      backgroundColor: currentView === "drivers" ? "#7c3aed" : "#f3f4f6",
+                      color: currentView === "drivers" ? "#ffffff" : "#4b5563",
+                      padding: "1px 7px",
+                      borderRadius: "10px",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {driversList.length}
+                  </span>
+                </button>
+              </li>
+
               <li className="vms-nav-item">
                 <button
                   type="button"
@@ -127,25 +159,8 @@ export default function App() {
                     letterSpacing: "0.04em",
                   }}
                 >
-                  Fleet Operations
+                  Fleet Compliance
                 </div>
-              </li>
-
-              <li className="vms-nav-item">
-                <button
-                  type="button"
-                  className="vms-nav-button"
-                  style={{ opacity: 0.8 }}
-                  onClick={() => {
-                    setSelectedVendorFilterForVehicles(null);
-                    setCurrentView("vehicles");
-                  }}
-                >
-                  <span>Active Drivers</span>
-                  <span style={{ fontSize: "11px", color: "#6b7280" }}>
-                    {driversList.length}
-                  </span>
-                </button>
               </li>
 
               <li className="vms-nav-item">
@@ -167,6 +182,20 @@ export default function App() {
 
         {/* Dynamic Content View */}
         <main className="vms-main-content">
+          {currentView === "drivers" && (
+            <DriverList
+              drivers={driversList}
+              vendors={vendorsList}
+              vehicles={vehiclesList}
+              documents={documents}
+              admin={admin}
+              onUpdateDrivers={setDriversList}
+              onUpdateVehicles={setVehiclesList}
+              initialVendorFilter={selectedVendorFilterForDrivers}
+              onClearVendorFilter={() => setSelectedVendorFilterForDrivers(null)}
+            />
+          )}
+
           {currentView === "vehicles" && (
             <VehicleList
               vehicles={vehiclesList}
@@ -204,10 +233,13 @@ export default function App() {
           {currentView === "vendors" && (
             <VendorList
               vendors={vendorsList}
+              vehicles={vehiclesList}
+              drivers={driversList}
               admin={admin}
               onCreateVendorClick={() => setCurrentView("create-vendor")}
               onViewHierarchyClick={() => setCurrentView("hierarchy")}
               onViewVehiclesForVendor={handleNavigateToVehiclesForVendor}
+              onViewDriversForVendor={handleNavigateToDriversForVendor}
             />
           )}
         </main>
